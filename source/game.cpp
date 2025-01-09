@@ -1,35 +1,28 @@
 #include "../header/game.h"
+#include <iostream>
 
-using namespace std;
+char grille[20][20];  // Définition unique
 
-const int hauteur = 15;
-const int largueur = 40;
-int i, j;
-
-// Fonction dessin du tableau
-void tableau(){
-    system("cls"); // Netoyer la console
-    for (i = 0; i < largueur + 1; i++)
-        cout <<"*";
-    cout << endl;
-
-    for (i = 0; i < hauteur; i++)
-    {
-        for(j = 0; j < largueur + 1; j++)
-        {
-            if (j == 0)
-                cout <<"*";
-            else 
-                cout <<" ";
-
-            if (j == largueur - 1)
-                cout <<"*";
+void initialiserGrille() {
+    for (int i = 0; i < hauteur; i++) {
+        for (int j = 0; j < largeur; j++) {
+            if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) {
+                grille[i][j] = '*';
+            } else {
+                grille[i][j] = '.';
+            }
         }
-        cout << endl;
     }
+}
 
-    for (i = 0; i < largueur+ 1; i++)
-        cout <<"*";
-    cout << endl;
 
+void afficherGrille() {
+    system("clear");  // Linux
+    system("cls"); // Windows
+    for (int i = 0; i < hauteur; i++) {
+        for (int j = 0; j < largeur; j++) {
+            std::cout << grille[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
 }
