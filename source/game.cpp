@@ -9,13 +9,13 @@ int i, j;
 // Fonction dessin du tableau
 void tableau(){
     system("cls"); // Netoyer la console
-    for (i = 0; i < largueur; i++)
+    for (i = 0; i < largueur + 1; i++)
         cout <<"*";
     cout << endl;
 
     for (i = 0; i < hauteur; i++)
     {
-        for(j = 0; j < largueur; j++)
+        for(j = 0; j < largueur + 1; j++)
         {
             if (j == 0)
                 cout <<"*";
@@ -28,7 +28,7 @@ void tableau(){
         cout << endl;
     }
 
-    for (i = 0; i < largueur; i++)
+    for (i = 0; i < largueur+ 1; i++)
         cout <<"*";
     cout << endl;
 
