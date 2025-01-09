@@ -7,3 +7,6 @@
 # Compiler sur windows faire un :
 * ```g++ -o main.exe main.cpp source/*.cpp```
 * ```./main.exe```
+
+# Démonstration
+![Demo](./assets/demo.gif)
