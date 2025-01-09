@@ -4,5 +4,6 @@
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
+    tableau();
     return 0;
 }
