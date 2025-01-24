@@ -1,11 +1,19 @@
 #include "../header/game.h"
 #include <iostream>
-#include <conio.h> // Windows
-#include <unistd.h> // Linux
 #include <cstdlib>
+#include <vector>
 
+#ifdef _WIN32
+#include <conio.h> // Windows
+#else
+#include <termios.h> // Linux
+#include <unistd.h>  // Linux
+#include <sys/ioctl.h>
+#endif
+
+// Déclarations globales
 char grille[20][20];  // Définition unique
-Serpent serpent; // Définition unique
+Serpent serpent;      // Définition unique
 
 void initialiserGrille() {
     for (int i = 0; i < hauteur; i++) {
@@ -18,7 +26,6 @@ void initialiserGrille() {
         }
     }
 }
-
 
 void afficherGrille() {
     clear();
@@ -37,14 +44,35 @@ void initialiserSerpent() {
     grille[serpent.x][serpent.y] = 'O';
 }
 
+#ifdef _WIN32
+// Fonction pour lire une touche sur Windows
 char lireTouche() {
-    if (_kbhit()) {  // Windows/Linux
+    if (_kbhit()) {
         return _getch();
     }
     return ' ';
 }
+#else
+// Fonction pour lire une touche sur Linux
+char lireTouche() {
+    struct termios oldt, newt;
+    char ch;
+    int oldf;
 
+    // Sauvegarde de l'état actuel du terminal
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
+    // Lecture non bloquante
+    ch = getchar();
+
+    // Restauration de l'état du terminal
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+#endif
 
 void deplacerSerpent(char direction) {
     int dx = 0, dy = 0;
@@ -77,6 +105,6 @@ void clear() {
     #ifdef _WIN32
     system("cls");
     #else
-        system("clear");
+    system("clear");
     #endif
 }
