@@ -21,6 +21,7 @@ void afficherGrille();
 void initialiserSerpent();
 void deplacerSerpent(char direction);
 char lireTouche();
+void randomFruit();
 void clear();
 
 #endif

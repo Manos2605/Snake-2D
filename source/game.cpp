@@ -73,6 +73,10 @@ void deplacerSerpent(char direction) {
     serpent.y = nouvelY;
 }
 
+void randomFruit() {
+    
+}
+
 void clear() {
     #ifdef _WIN32
     system("cls");
