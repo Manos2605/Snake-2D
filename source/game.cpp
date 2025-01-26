@@ -39,7 +39,9 @@ void initialiserSerpent() {
     serpent.x = hauteur / 2;
     serpent.y = largeur / 2;
     serpent.corps.push_back({serpent.x, serpent.y});
+    serpent.corps.push_back({serpent.x, serpent.y + 1});
     grille[serpent.x][serpent.y] = 'O';
+    grille[serpent.x][serpent.y + 1] = 'O';
 }
 
 // Fonction pour lire une touche sans bloquer (Windows et Linux)
