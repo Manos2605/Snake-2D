@@ -9,7 +9,4 @@
 * ```./main.exe```
 
 # Démonstration
-<div style="display: flex; justify-content: space-between;">
-  <img src="./assets/demo0.gif" alt="Demo 1" style="width: 48%;"/>
-  <img src="./assets/demo1.gif" alt="Demo 2" style="width: 48%;"/>
-</div>
+![Demo 1](./assets/demo0.gif)  ![Demo 2](./assets/demo1.gif)
