@@ -1,7 +1,12 @@
 #include "../header/game.h"
 #include <iostream>
-#include <conio.h> // Windows
-#include <unistd.h> // Linux
+#ifdef _WIN32
+    #include <conio.h>  // Windows
+#else
+    #include <termios.h> // Linux/Unix
+    #include <unistd.h>
+    #include <fcntl.h>
+#endif
 #include <cstdlib>
 
 char grille[20][20];  // Définition unique
@@ -37,11 +42,34 @@ void initialiserSerpent() {
     grille[serpent.x][serpent.y] = 'O';
 }
 
+// Fonction pour lire une touche sans bloquer (Windows et Linux)
 char lireTouche() {
-    if (_kbhit()) {  // Windows/Linux
+#ifdef _WIN32
+    if (_kbhit()) { // Si une touche a été pressée
         return _getch();
     }
-    return ' ';
+#else
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    tcgetattr(STDIN_FILENO, &oldt); // Sauvegarde l'état actuel du terminal
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO); // Désactive l'affichage et le mode canonique
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restaure l'état initial du terminal
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if (ch != EOF) {
+        return ch;
+    }
+#endif
+    return ' '; // Aucun caractère pressé
 }
 
 
