@@ -1,16 +1,20 @@
 #include "../header/game.h"
 #include <iostream>
-#ifdef _WIN32
-    #include <conio.h>  // Windows
-#else
-    #include <termios.h> // Linux/Unix
-    #include <unistd.h>
-    #include <fcntl.h>
-#endif
+#include <conio.h>  // Windows
 #include <cstdlib>
+#include <unistd.h>
 
 char grille[20][20];  // Définition unique
 Serpent serpent; // Définition unique
+
+void AfficherMenu() {
+    std::cout << "------ MENU ------" << std::endl;
+    std::cout << "1. Joueur solo" << std::endl;
+    std::cout << "2. Multijoueur" << std::endl;
+    std::cout << "3. Meilleur score" << std::endl;
+    std::cout << "Choisir une option: ";
+}
+
 
 void initialiserGrille() {
     for (int i = 0; i < hauteur; i++) {
@@ -46,31 +50,9 @@ void initialiserSerpent() {
 
 // Fonction pour lire une touche sans bloquer (Windows et Linux)
 char lireTouche() {
-#ifdef _WIN32
     if (_kbhit()) { // Si une touche a été pressée
         return _getch();
     }
-#else
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt); // Sauvegarde l'état actuel du terminal
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO); // Désactive l'affichage et le mode canonique
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restaure l'état initial du terminal
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF) {
-        return ch;
-    }
-#endif
     return ' '; // Aucun caractère pressé
 }
 
@@ -105,6 +87,31 @@ void deplacerSerpent(char direction) {
 
 void randomFruit() {
     
+}
+
+void jeuSolo(){
+    char derniereDirection = 'd'; // Direction de départ
+    while (true) {
+        afficherGrille();
+
+            // Vérifie si une touche a été pressée 
+            char nouvelleDirection = lireTouche();
+            if (nouvelleDirection != ' ') {
+                // Empêche le serpent de revenir sur lui-même
+                if (!((nouvelleDirection == 'z' && derniereDirection == 's') ||
+                    (nouvelleDirection == 's' && derniereDirection == 'z') ||
+                    (nouvelleDirection == 'q' && derniereDirection == 'd') ||
+                    (nouvelleDirection == 'd' && derniereDirection == 'q'))) {
+                    derniereDirection = nouvelleDirection;
+                }
+            }
+
+            // Déplacement dans la dernière direction connue
+            deplacerSerpent(derniereDirection);
+
+            // vitesse du serpent
+            usleep(200000); // 200 ms
+    }
 }
 
 void clear() {

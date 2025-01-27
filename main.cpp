@@ -1,35 +1,31 @@
 #include "header/game.h"
 #include "header/score.h"
-#include <unistd.h>
 #include <iostream>
-
-char derniereDirection = 'd'; // Direction de depart
 
 int main() {
     initialiserGrille();
     initialiserSerpent();
 
     while (true) {
-        afficherGrille();
 
-        // Vérifie si une touche a été pressée 
-        char nouvelleDirection = lireTouche();
-        if (nouvelleDirection != ' ') {
-            // Empêche le serpent de revenir sur lui-même
-            if (!((nouvelleDirection == 'z' && derniereDirection == 's') ||
-                  (nouvelleDirection == 's' && derniereDirection == 'z') ||
-                  (nouvelleDirection == 'q' && derniereDirection == 'd') ||
-                  (nouvelleDirection == 'd' && derniereDirection == 'q'))) {
-                derniereDirection = nouvelleDirection;
-            }
+        AfficherMenu();
+        int choix;
+        std::cin >> choix;
+
+        if (choix == 1) {
+            jeuSolo();
         }
-
-        // Déplacement dans la dernière direction connue
-        deplacerSerpent(derniereDirection);
-
-        // vitesse du serpent
-        usleep(200000); // 200 ms
+        else if (choix == 2) {
+            /* jeuMulti(); */ break;
+        }
+        else if (choix == 3) {
+            break;
+        }
+        else {
+            std::cout << "Option invalide!" << std::endl;
+        }
     }
 
     return 0;
+    
 }

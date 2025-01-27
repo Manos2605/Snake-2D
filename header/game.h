@@ -16,12 +16,14 @@ struct Serpent {
 
 extern Serpent serpent;
 
+void AfficherMenu();
 void initialiserGrille();
 void afficherGrille();
 void initialiserSerpent();
 void deplacerSerpent(char direction);
 char lireTouche();
 void randomFruit();
+void jeuSolo();
 void clear();
 
 #endif
