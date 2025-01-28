@@ -3,27 +3,26 @@
 
 #include <vector>
 
-const int hauteur = 20;
-const int largeur = 20;
+const int HAUTEUR = 20;
+const int LARGEUR = 20;
 
-extern char grille[hauteur][largeur];
-
+enum Direction { HAUT, BAS, GAUCHE, DROITE };
 
 struct Serpent {
     int x, y;
-    std::vector<std::pair<int, int>> corps;  // Corps du serpent (liste des positions).
+    std::vector<std::pair<int, int>> corps;
+    Direction direction;
+    char symbole;
 };
 
-extern Serpent serpent;
-
-void AfficherMenu();
 void initialiserGrille();
 void afficherGrille();
-void initialiserSerpent();
-void deplacerSerpent(char direction);
+void genererNourriture();
+void initialiserSerpent(Serpent &serpent, char symbole, int startX, int startY);
+void deplacerSerpent(Serpent &serpent);
+bool collision(Serpent &serpent);
 char lireTouche();
-void randomFruit();
-void jeuSolo();
-void clear();
+void sauvegarderScore(int score);
+int chargerScore();
 
 #endif
