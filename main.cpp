@@ -1,78 +1,109 @@
 #include "header/game.h"
 #include "header/score.h"
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <unistd.h>
-int vitesse = 100000; // Vitesse initiale du serpent (en microsecondes)
 
-void menu() {
-    std::cout << "1. Nouvelle Partie\n";
-    std::cout << "2. Mode Multijoueur\n";
-    std::cout << "3. Quitter\n";
-    std::cout << "Votre choix : ";
-}
-
-bool multiJoueur;
+std::string nomJoueur[2];
 
 int main() {
     srand(time(NULL));
 
-    // Menu
-    int choix;
-    menu();
-    std::cin >> choix;
+    titre();
 
-    switch (choix) {
-        case 1:
-            multiJoueur = false;
-            break;
-        case 2:
-            multiJoueur = true;
-            break;
-        case 3:
-            return 0;
-        default:
-            std::cout << "Choix invalide.\n";
-            return 0;
-    }
-
-    // Initialisation
-    bool multiJoueur = false;
-    Serpent serpent1, serpent2;
-    initialiserGrille();
-    initialiserSerpent(serpent1, 'O', HAUTEUR / 2, LARGEUR / 2);
-    if (multiJoueur) {
-        initialiserSerpent(serpent2, 'X', HAUTEUR / 2 + 2, LARGEUR / 2);
-    }
-    genererNourriture();
-
-    // Boucle principale du jeu
     while (true) {
-        afficherGrille();
+        int choix;
+        menu();
+        std::cin >> choix;
 
-        char touche = lireTouche();
-        switch (touche) {
-            case 'z': serpent1.direction = HAUT; break;
-            case 's': serpent1.direction = BAS; break;
-            case 'q': serpent1.direction = GAUCHE; break;
-            case 'd': serpent1.direction = DROITE; break;
+        system("cls");
+
+        if (choix == 4) {
+            titre();
+            std::cout << "Au revoir !\n";
+            break; // Quitter le programme
         }
 
-        deplacerSerpent(serpent1);
+        switch (choix) {
+            case 1:
+                titre();
+                std::cout << "Entrez votre nom : ";
+                std::cin >> nomJoueur[0];
+                multiJoueur = false;
+                break;
+            case 2:
+                titre();
+                std::cout << "Entrez votre nom joueur 1 : ";
+                std::cin >> nomJoueur[0];
+                std::cout << "Entrez votre nom joueur 2 : ";
+                std::cin >> nomJoueur[1];
+                multiJoueur = true;
+                break;
+            case 3:
+                titre();
+                afficherTopScores();
+                std::cout << "\n\n";
+                continue; // Retour au menu
+            default:
+                std::cout << "Choix invalide.\n";
+                continue; // Retour au menu
+        }
 
+        Serpent serpent1, serpent2;
+        bool collision1 = false, collision2 = false;
+        initialiserGrille();
+        initialiserSerpent(serpent1, 'O', HAUTEUR / 2, LARGEUR / 2, 1);
         if (multiJoueur) {
-            switch (touche) {
-                case 'i': serpent2.direction = HAUT; break;
-                case 'k': serpent2.direction = BAS; break;
-                case 'j': serpent2.direction = GAUCHE; break;
-                case 'l': serpent2.direction = DROITE; break;
+            initialiserSerpent(serpent2, 'X', HAUTEUR / 2 + 2, LARGEUR / 2, 2);
+        }
+        genererNourriture();
+
+        while (true) { // jeu
+            afficherGrille(nomJoueur);
+            char touche = lireTouche();
+
+            // Joueur 1
+            switch (touche) { // Eviter le retour sur soit des serpents
+                case 'z': if (serpent1.direction != BAS) serpent1.direction = HAUT; break;
+                case 's': if (serpent1.direction != HAUT) serpent1.direction = BAS; break;
+                case 'q': if (serpent1.direction != DROITE) serpent1.direction = GAUCHE; break;
+                case 'd': if (serpent1.direction != GAUCHE) serpent1.direction = DROITE; break;
             }
-            deplacerSerpent(serpent2);
+
+            collision1 = deplacerSerpent(serpent1, 1);
+
+            // Joueur 2 si multijoueur
+            if (multiJoueur) {
+                switch (touche) {
+                    case 72: if (serpent2.direction != BAS) serpent2.direction = HAUT; break;
+                    case 80: if (serpent2.direction != HAUT) serpent2.direction = BAS; break;
+                    case 75: if (serpent2.direction != DROITE) serpent2.direction = GAUCHE; break;
+                    case 77: if (serpent2.direction != GAUCHE) serpent2.direction = DROITE; break;
+                }
+
+                collision2 = deplacerSerpent(serpent2, 2);
+            }
+
+            // Collisions
+            if (collision1 || (multiJoueur && collision2)) {
+                break; // Fin
+            }
+
+            usleep(vitesse); // Vitesse
         }
 
-        usleep(vitesse);
+        // Score final
+        std::cout << "\n---GAME OVER, Retour au Menu Principale ---\n";
+        sauvegarderScore(nomJoueur[0], score[0]);
+        if (multiJoueur) {
+            sauvegarderScore(nomJoueur[1], score[1]);
+        } 
+
+        score[0] = 0; // Réinitialiser joueur 1
+        score[1] = 0; // Réinitialiser joueur 2
+        vitesse = 200000; // Réinitialiser vitesse
     }
 
     return 0;
 }
+
+// 🐍

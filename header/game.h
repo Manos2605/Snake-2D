@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <vector>
+#include <string>
 
 const int HAUTEUR = 20;
 const int LARGEUR = 20;
@@ -15,14 +16,17 @@ struct Serpent {
     char symbole;
 };
 
+extern bool multiJoueur;
+extern int score[2];
+extern int vitesse;
+
+void titre();
+void menu();
 void initialiserGrille();
-void afficherGrille();
+void afficherGrille(std::string nomjoueur[2]);
 void genererNourriture();
-void initialiserSerpent(Serpent &serpent, char symbole, int startX, int startY);
-void deplacerSerpent(Serpent &serpent);
-bool collision(Serpent &serpent);
+void initialiserSerpent(Serpent &serpent, char symbole, int startX, int startY, int joueur);
+bool deplacerSerpent(Serpent &serpent, int joueur);
 char lireTouche();
-void sauvegarderScore(int score);
-int chargerScore();
 
 #endif

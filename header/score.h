@@ -1,7 +1,8 @@
 #ifndef SCORE_H
 #define SCORE_H
 
-void sauvegarderScore(int score);
-int chargerScore();
+#include <string>
+void sauvegarderScore(std::string nom, int score);
+void afficherTopScores();
 
 #endif

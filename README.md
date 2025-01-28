@@ -8,5 +8,9 @@
 * ```g++ -o main.exe main.cpp source/*.cpp```
 * ```./main.exe```
 
+# Prise en charge des couleurs ANSI (executer sur le terminale) :
+* ```reg add "HKCU\Console" /v VirtualTerminalLevel /t REG_DWORD /d 1 /f```
+
+
 # Démonstration
 ![Demo 1](./assets/demo0.gif)  ![Demo 2](./assets/demo1.gif)
