@@ -1,6 +1,7 @@
 #include "header/game.h"
 #include "header/score.h"
 #include <iostream>
+#include <ctime>
 #include <unistd.h>
 
 std::string nomJoueur[2];
